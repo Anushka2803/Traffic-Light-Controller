@@ -1,0 +1,156 @@
+module trafficlight(
+    input clk,
+    input rst,
+    output reg [2:0] m1,
+    output reg [2:0] mt,
+    output reg [2:0] m2,
+    output reg [2:0] s
+    );
+    
+    parameter s0=0, s1=1, s2=2, s3=3, s4=4, s5=5;
+    reg [3:0]cout;
+    reg [2:0]ps;
+    parameter sec7= 7, sec5= 5, sec3= 3, sec2= 2;
+    
+    
+    always @(posedge clk or posedge rst)  // defines state change 
+    begin 
+    if (rst == 1)
+        begin
+        ps <= s0;
+        cout <= 0;
+        end
+    else
+    
+        case(ps)
+            s0: if(cout< sec7)
+                    begin
+                    ps <= s0;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s1;
+                    cout <= 0;
+                    end
+                    
+            s1: if(cout< sec2)
+                    begin
+                    ps <= s1;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s2;
+                    cout <= 0;
+                    end
+            s2: if(cout< sec5)
+                    begin
+                    ps <= s2;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s3;
+                    cout <= 0;
+                    end
+            s3: if(cout< sec2)
+                    begin
+                    ps <= s3;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s4;
+                    cout <= 0;
+                    end        
+            s4: if(cout< sec3)
+                    begin
+                    ps <= s4;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s5;
+                    cout <= 0;
+                    end       
+            s5: if(cout< sec2)
+                    begin
+                    ps <= s5;
+                    cout <= cout+1;
+                    end
+                else
+                    begin
+                    ps <= s0;
+                    cout <= 0;
+                    end 
+                default: ps <= s0;
+                endcase
+    end
+    
+    
+    
+    always @(posedge clk) // defines light for each state
+    
+    begin
+    case(ps)
+        s0: 
+            begin
+            m1 <= 3'b001;
+            m2 <= 3'b001;
+            mt <= 3'b100;
+            s <= 3'b100;
+            end
+            
+        s1: 
+            begin
+            m1 <= 3'b001;
+            m2 <= 3'b010;
+            mt <= 3'b100;
+            s <= 3'b100;
+            end
+            
+        s2: 
+            begin
+            m1 <= 3'b001;
+            m2 <= 3'b100;
+            mt <= 3'b001;
+            s <= 3'b100;
+            end
+            
+        s3: 
+            begin
+            m1 <= 3'b010;
+            m2 <= 3'b100;
+            mt <= 3'b010;
+            s <= 3'b100;
+            end
+        
+        s4: 
+            begin
+            m1 <= 3'b100;
+            m2 <= 3'b100;
+            mt <= 3'b100;
+            s <= 3'b001;
+            end
+            
+        s5: 
+            begin
+            m1 <= 3'b100;
+            m2 <= 3'b100;
+            mt <= 3'b100;
+            s <= 3'b010;
+            end
+                
+        default: 
+            begin
+            m1 <= 3'b000;
+            m2 <= 3'b000;
+            mt <= 3'b000;
+            s <= 3'b000;
+            end
+        endcase
+        
+    end
+    
+endmodule
