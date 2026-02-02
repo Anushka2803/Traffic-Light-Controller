@@ -1,0 +1,61 @@
+`timescale 1ns/1ps
+
+module trafficlight_tb;
+  reg clk, rst;
+  wire [2:0] m1;
+  wire [2:0] m2;
+  wire [2:0] mt;
+  wire [2:0] s;
+  
+  //Connect input signals to dut(design under test) ports
+  trafficlight DUT(.clk(clk), .rst(rst), .m1(m1), .m2(m2), .mt(mt), .s(s)); //.portname(signalname) 
+  
+  initial // clock pulse generate
+    begin
+    clk = 1'b0;
+    forever #5 clk = ~clk;
+    end
+    
+    
+  initial
+    begin 
+    $dumpfile("trafficlight_tb.vcd"); //opens the vcd file created
+    $dumpvars(0,trafficlight_tb); //(0) records all the variable
+    
+    rst = 0;
+    #10;
+    
+    rst = 1;
+    #10;
+    
+    rst = 0;
+    #2000;
+    
+    $finish;
+    
+    end
+    
+    
+    
+    // Monitor outputs
+    initial begin
+        $monitor("Time = %0t: m1 = %b, m2 = %b, mt = %b, s = %b", 
+                 $time, m1, m2, mt, s);
+    end
+    
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
